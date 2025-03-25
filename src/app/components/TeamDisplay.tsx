@@ -10,7 +10,7 @@ interface TeamDisplayProps {
 
 export default function TeamDisplay({ groups }: TeamDisplayProps) {
     const [teamData, setTeamData] = useState<{ teamA: Student[], teamB: Student[] } | null>(null);
-    const [studentsPerGroup, setStudentsPerGroup] = useState(3);
+    const [studentsPerGroup, setStudentsPerGroup] = useState(4);
 
     const handleAssignTeams = () => {
         // 先通过标记分组
@@ -21,8 +21,8 @@ export default function TeamDisplay({ groups }: TeamDisplayProps) {
 
         if (markedA.length > 0 && markedB.length > 0) {
             // 有标记，从标记的组中选择
-            teamAGroups = selectRandomGroups(markedA, 3);
-            teamBGroups = selectRandomGroups(markedB, 3);
+            teamAGroups = selectRandomGroups(markedA, 4);
+            teamBGroups = selectRandomGroups(markedB, 4);
         } else {
             // 没有标记，随机分配
             const shuffled = [...groups].sort(() => 0.5 - Math.random());
@@ -31,8 +31,8 @@ export default function TeamDisplay({ groups }: TeamDisplayProps) {
             const allTeamA = shuffled.slice(0, halfPoint);
             const allTeamB = shuffled.slice(halfPoint);
 
-            teamAGroups = selectRandomGroups(allTeamA, 3);
-            teamBGroups = selectRandomGroups(allTeamB, 3);
+            teamAGroups = selectRandomGroups(allTeamA, 4);
+            teamBGroups = selectRandomGroups(allTeamB, 4);
         }
 
         // 从每组中选择学生
@@ -44,7 +44,7 @@ export default function TeamDisplay({ groups }: TeamDisplayProps) {
 
     const handleStudentsPerGroupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value);
-        if (!isNaN(value) && value > 0 && value <= 4) {
+        if (!isNaN(value) && value > 0 && value <= 6) {
             setStudentsPerGroup(value);
         }
     };
@@ -67,7 +67,7 @@ export default function TeamDisplay({ groups }: TeamDisplayProps) {
                             type="number"
                             id="studentsPerGroup"
                             min="1"
-                            max="4"
+                            max="6"
                             value={studentsPerGroup}
                             onChange={handleStudentsPerGroupChange}
                             className="mt-1 block w-24 px-3 py-2 bg-[#2d2d2d] border border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)] text-white"
