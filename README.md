@@ -1,4 +1,34 @@
+
+
+# 雄鹰猛虎分组系统 (Eagle-Tiger Team Divider)
+
+## 项目说明 (Project Description)
+
+### 中文说明
+
+这是一个用于学生A/B分组的系统，有以下特点：
+- 支持从Excel文件导入学生数据
+- 可以将学生分为"雄鹰队"(A队)和"猛虎队"(B队)
+- 有精美的界面和动物头像设计
+- 支持队伍竞赛或对抗分组
+- 可定制每组抽取的学生数量
+- 支持生成和下载Excel模板
+
+### English Description
+
+This is a student A/B team dividing system with the following features:
+- Import student data from Excel files
+- Divide students into "Eagle Team" (Team A) and "Tiger Team" (Team B)
+- Beautiful interface with animal avatar designs
+- Support for team competition or opposing group formation
+- Customizable number of students selected from each group
+- Support for generating and downloading Excel templates
+
+## About
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+
 
 ## Getting Started
 
@@ -34,3 +64,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
