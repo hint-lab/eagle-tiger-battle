@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { readExcelFile } from '../lib/excelHandler';
+import { readExcelFile, GroupData } from '../lib/excelHandler';
 import * as XLSX from 'xlsx';
 
 interface FileUploadProps {
-    onDataLoaded: (data: any) => void;
+    onDataLoaded: (data: GroupData[]) => void;
 }
 
 export default function FileUpload({ onDataLoaded }: FileUploadProps) {
@@ -147,7 +147,7 @@ export default function FileUpload({ onDataLoaded }: FileUploadProps) {
             <div className="mt-4 p-3 bg-[#252525] rounded-md border border-gray-700">
                 <h3 className="text-sm font-medium text-gray-300 mb-2">Excel文件格式说明:</h3>
                 <ul className="text-xs text-gray-400 list-disc pl-5 space-y-1 mb-3">
-                    <li>文件必须包含"组号"和"姓名"列</li>
+                    <li>文件必须包含&quot;组号&quot;和&quot;姓名&quot;列</li>
                     <li>组号必须是数字，用于区分不同组的学生</li>
                     <li>每行一条学生记录</li>
                     <li>支持Excel 2007+格式(.xlsx)和旧版Excel格式(.xls)</li>

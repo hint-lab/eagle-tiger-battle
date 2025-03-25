@@ -7,43 +7,43 @@ interface Student {
     team?: 'A' | 'B';  // 可能的队伍标记
 }
 
-interface GroupData {
+export interface GroupData {
     groupName: string;  // 组名
     students: Student[];
 }
 
-// 定义可能的列名匹配
-const GROUP_COLUMN_NAMES = ['组号', '小组', '组', 'group', 'groupnumber', 'group number', '分组', '班组', '队伍'];
-const NAME_COLUMN_NAMES = ['姓名', '名字', '学生', '学生姓名', 'name', 'student', 'student name'];
+// 可能未使用的代码，已注释掉
+// const GROUP_COLUMN_NAMES = ['组号', '小组', '组', 'group', 'groupnumber', 'group number', '分组', '班组', '队伍'];
+// const NAME_COLUMN_NAMES = ['姓名', '名字', '学生', '学生姓名', 'name', 'student', 'student name'];
 
-// 查找与目标列匹配的实际列名
-function findMatchingColumn(headers: string[], possibleNames: string[]): string | null {
-    for (const header of headers) {
-        for (const possibleName of possibleNames) {
-            if (header.toLowerCase() === possibleName.toLowerCase()) {
-                return header;
-            }
-        }
-    }
-    return null;
-}
+// 可能未使用的函数，已注释掉
+// function findMatchingColumn(headers: string[], possibleNames: string[]): string | null {
+//     for (const header of headers) {
+//         for (const possibleName of possibleNames) {
+//             if (header.toLowerCase() === possibleName.toLowerCase()) {
+//                 return header;
+//             }
+//         }
+//     }
+//     return null;
+// }
 
-// 处理中文组号提取数字
-function extractGroupNumber(groupName: string): number {
-    const chineseNumbers: Record<string, number> = {
-        '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
-        '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
-        '十一': 11, '十二': 12, '十三': 13, '十四': 14, '十五': 15
-    };
+// 可能未使用的函数，已注释掉
+// function extractGroupNumber(groupName: string): number {
+//     const chineseNumbers: Record<string, number> = {
+//         '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+//         '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
+//         '十一': 11, '十二': 12, '十三': 13, '十四': 14, '十五': 15
+//     };
 
-    for (const [chinese, num] of Object.entries(chineseNumbers)) {
-        if (groupName.includes(`第${chinese}组`)) {
-            return num;
-        }
-    }
+//     for (const [chinese, num] of Object.entries(chineseNumbers)) {
+//         if (groupName.includes(`第${chinese}组`)) {
+//             return num;
+//         }
+//     }
 
-    return NaN;
-}
+//     return NaN;
+// }
 
 export const readExcelFile = async (file: File): Promise<{ groups: GroupData[], teamsMarked: boolean }> => {
     const data = await file.arrayBuffer();
@@ -54,12 +54,12 @@ export const readExcelFile = async (file: File): Promise<{ groups: GroupData[], 
     const groupsMap = new Map<string, Student[]>();
     let teamsMarked = false;
 
-    jsonData.forEach((row: any) => {
+    jsonData.forEach((row) => {
         // 获取组号、姓名、学号和可能的队伍标记
-        const groupName = row['组号'] || '';
-        const name = row['姓名'] || '';
-        const studentId = row['学号']?.toString() || '';
-        const team = row['组别']; // 可能是A或B
+        const groupName = (row as Record<string, unknown>)['组号'] as string || '';
+        const name = (row as Record<string, unknown>)['姓名'] as string || '';
+        const studentId = ((row as Record<string, unknown>)['学号'] as string | number)?.toString() || '';
+        const team = (row as Record<string, unknown>)['组别'] as string; // 可能是A或B
 
         // 检查是否有A/B标记
         if (team === 'A' || team === 'B') {
