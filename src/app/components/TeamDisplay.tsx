@@ -1,20 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { selectGroupsByMarking, selectRandomGroups, selectStudentsFromGroups } from '../lib/excelHandler';
+import { selectGroupsByMarking, selectRandomGroups, selectStudentsFromGroups, GroupData, Student } from '../lib/excelHandler';
 import TeamAvatar, { TeamAvatarsDisplay } from './TeamAvatars';
-
-interface Student {
-    name: string;
-    groupName: string;
-    studentId: string;
-    team?: 'A' | 'B';
-}
-
-interface GroupData {
-    groupName: string;
-    students: Student[];
-}
 
 interface TeamDisplayProps {
     groups: GroupData[];

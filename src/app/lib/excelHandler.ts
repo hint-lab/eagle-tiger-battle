@@ -1,15 +1,17 @@
 import * as XLSX from 'xlsx';
 
-interface Student {
+export interface Student {
     name: string;  // 姓名
     groupName: string;  // 原始组名，如"第一组"
     studentId: string;  // 学号
     team?: 'A' | 'B';  // 可能的队伍标记
+    groupNumber?: number;  // 组号（数字）
 }
 
 export interface GroupData {
     groupName: string;  // 组名
     students: Student[];
+    groupNumber: number;  // 添加groupNumber属性以匹配page.tsx中的定义
 }
 
 // 可能未使用的代码，已注释掉
@@ -28,22 +30,30 @@ export interface GroupData {
 //     return null;
 // }
 
-// 可能未使用的函数，已注释掉
-// function extractGroupNumber(groupName: string): number {
-//     const chineseNumbers: Record<string, number> = {
-//         '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
-//         '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
-//         '十一': 11, '十二': 12, '十三': 13, '十四': 14, '十五': 15
-//     };
+// 提取中文组号中的数字
+function extractGroupNumber(groupName: string): number {
+    const chineseNumbers: Record<string, number> = {
+        '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+        '六': 6, '七': 7, '八': 8, '九': 9, '十': 10,
+        '十一': 11, '十二': 12, '十三': 13, '十四': 14, '十五': 15
+    };
 
-//     for (const [chinese, num] of Object.entries(chineseNumbers)) {
-//         if (groupName.includes(`第${chinese}组`)) {
-//             return num;
-//         }
-//     }
+    // 尝试从"第X组"格式中提取
+    for (const [chinese, num] of Object.entries(chineseNumbers)) {
+        if (groupName.includes(`第${chinese}组`)) {
+            return num;
+        }
+    }
 
-//     return NaN;
-// }
+    // 尝试直接从字符串中提取数字
+    const matches = groupName.match(/\d+/);
+    if (matches && matches.length > 0) {
+        return parseInt(matches[0], 10);
+    }
+
+    // 如果无法提取数字，返回一个默认值或随机数
+    return Math.floor(Math.random() * 100) + 1;
+}
 
 export const readExcelFile = async (file: File): Promise<{ groups: GroupData[], teamsMarked: boolean }> => {
     const data = await file.arrayBuffer();
@@ -61,6 +71,9 @@ export const readExcelFile = async (file: File): Promise<{ groups: GroupData[], 
         const studentId = ((row as Record<string, unknown>)['学号'] as string | number)?.toString() || '';
         const team = (row as Record<string, unknown>)['组别'] as string; // 可能是A或B
 
+        // 从组名中提取数字
+        const groupNumber = extractGroupNumber(groupName);
+
         // 检查是否有A/B标记
         if (team === 'A' || team === 'B') {
             teamsMarked = true;
@@ -75,7 +88,8 @@ export const readExcelFile = async (file: File): Promise<{ groups: GroupData[], 
                 name,
                 groupName,
                 studentId,
-                team: team === 'A' || team === 'B' ? team : undefined
+                team: team === 'A' || team === 'B' ? team : undefined,
+                groupNumber
             });
         }
     });
@@ -83,7 +97,13 @@ export const readExcelFile = async (file: File): Promise<{ groups: GroupData[], 
     // 转换为数组格式
     const groups: GroupData[] = [];
     groupsMap.forEach((students, groupName) => {
-        groups.push({ groupName, students });
+        // 从第一个学生中获取组号
+        const groupNumber = students.length > 0 ? students[0].groupNumber || 0 : 0;
+        groups.push({
+            groupName,
+            students,
+            groupNumber
+        });
     });
 
     return { groups, teamsMarked };
