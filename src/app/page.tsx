@@ -5,14 +5,6 @@ import FileUpload from './components/FileUpload';
 import TeamDisplay from './components/TeamDisplay';
 import { GroupData } from './lib/excelHandler';
 
-interface Student {
-  name: string;
-  groupNumber: number;
-  groupName?: string;
-  studentId?: string;
-  team?: 'A' | 'B';
-}
-
 export default function Home() {
   const [groups, setGroups] = useState<GroupData[]>([]);
 
