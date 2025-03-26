@@ -10,7 +10,7 @@ interface TeamDisplayProps {
 
 export default function TeamDisplay({ groups }: TeamDisplayProps) {
     const [teamData, setTeamData] = useState<{ teamA: Student[], teamB: Student[] } | null>(null);
-    const [studentsPerGroup, setStudentsPerGroup] = useState(4);
+    const [studentsPerGroup, setStudentsPerGroup] = useState(3);
 
     const handleAssignTeams = () => {
         // 先通过标记分组
