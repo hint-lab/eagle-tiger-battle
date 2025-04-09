@@ -10,29 +10,39 @@ interface TeamDisplayProps {
 
 export default function TeamDisplay({ groups }: TeamDisplayProps) {
     const [teamData, setTeamData] = useState<{ teamA: Student[], teamB: Student[] } | null>(null);
-    const [studentsPerGroup, setStudentsPerGroup] = useState(3);
+    const [studentsPerGroup, setStudentsPerGroup] = useState(4);
 
     const handleAssignTeams = () => {
         // 先通过标记分组
         const { teamA: markedA, teamB: markedB } = selectGroupsByMarking(groups);
 
-        // 如果有标记的组，使用标记的组；否则随机分配
+        // 如果有标记的组，使用标记的组；否则按顺序分配
         let teamAGroups, teamBGroups;
 
         if (markedA.length > 0 && markedB.length > 0) {
             // 有标记，从标记的组中选择
-            teamAGroups = selectRandomGroups(markedA, 4);
-            teamBGroups = selectRandomGroups(markedB, 4);
+            teamAGroups = selectRandomGroups(markedA, 3);
+            teamBGroups = selectRandomGroups(markedB, 3);
         } else {
-            // 没有标记，随机分配
-            const shuffled = [...groups].sort(() => 0.5 - Math.random());
-            const halfPoint = Math.floor(shuffled.length / 2);
+            // 没有标记，按顺序分配（前部分为A队，后部分为B队）
+            const halfPoint = Math.floor(groups.length / 2);
 
-            const allTeamA = shuffled.slice(0, halfPoint);
-            const allTeamB = shuffled.slice(halfPoint);
+            // 按组号排序
+            const sortedGroups = [...groups].sort((a, b) => a.groupNumber - b.groupNumber);
 
-            teamAGroups = selectRandomGroups(allTeamA, 4);
-            teamBGroups = selectRandomGroups(allTeamB, 4);
+            const allTeamA = sortedGroups.slice(0, halfPoint);
+            const allTeamB = sortedGroups.slice(halfPoint);
+
+            // 设置组的team属性
+            allTeamA.forEach(group => {
+                group.team = 'A';
+            });
+            allTeamB.forEach(group => {
+                group.team = 'B';
+            });
+
+            teamAGroups = selectRandomGroups(allTeamA, 3);
+            teamBGroups = selectRandomGroups(allTeamB, 3);
         }
 
         // 从每组中选择学生
@@ -86,7 +96,7 @@ export default function TeamDisplay({ groups }: TeamDisplayProps) {
                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                         {groups.map((group) => (
                             <li key={group.groupName} className="text-sm bg-[#252525] p-2 rounded border border-gray-700 transition-all duration-200 hover:bg-[#303030] hover:border-gray-600">
-                                {group.groupName}: <span className="text-[var(--primary)]">{group.students.length}</span> 人
+                                {group.groupName} : <span className="text-[var(--primary)]">{group.students.length}</span> 人 {group.team ? `[${group.team}队]` : ''}
                             </li>
                         ))}
                     </ul>
